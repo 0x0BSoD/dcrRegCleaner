@@ -1,0 +1,5 @@
+---
+registry: http://localhost:5000
+api_ver: v2
+service: support-registry_registry
+tags_to_stay: 3
