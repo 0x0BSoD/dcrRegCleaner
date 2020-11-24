@@ -80,6 +80,8 @@ func removeImage(c *Client, repo, tag string) error {
 	return nil
 }
 
+//func removeOldImages(c *)
+
 func printRegContent(c *Client) error {
 	repos, err := catalog(c)
 	if err != nil {

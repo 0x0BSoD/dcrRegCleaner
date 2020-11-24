@@ -33,7 +33,7 @@ func (c *Client) Get(endpoint string) ([]byte, http.Header, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, nil, fmt.Errorf("error during executing request: %s", err)
+		return nil, nil, fmt.Errorf("error during executing request, status: %d, error if exist: %s", resp.StatusCode, err)
 	}
 
 	bodyByte, err := ioutil.ReadAll(resp.Body)
