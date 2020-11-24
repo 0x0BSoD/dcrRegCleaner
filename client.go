@@ -32,14 +32,14 @@ func (c *Client) Get(endpoint string) ([]byte, http.Header, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		fmt.Printf("request: %s", endpoint)
-		return nil, nil, fmt.Errorf("error during executing request, status: %d, error if exist: %s", resp.StatusCode, err)
-	}
-
 	bodyByte, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, nil, fmt.Errorf("error during read response body: %s", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Printf("request: %s\n", endpoint)
+		return nil, nil, fmt.Errorf("error during executing request, status: %d, response:\n %s", resp.StatusCode, string(bodyByte))
 	}
 
 	return bodyByte, resp.Header, nil

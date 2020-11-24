@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -99,7 +100,8 @@ func printRegContent(c *Client) error {
 		for _, t := range tags.Tags {
 			digest, created, err := shaDigestAndSize(c, r, t)
 			if err != nil {
-				return err
+				log.Println(err.Error())
+				continue
 			}
 
 			toPrint = append(toPrint, ToPrintItem{
