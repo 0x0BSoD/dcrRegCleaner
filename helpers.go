@@ -32,7 +32,7 @@ func printAsTable(toPrint ToPrint) {
 	for _, i := range toPrint {
 		sort.Sort(i)
 		for _, c := range i {
-			data = append(data, []string{c.Repo, c.Tag, c.Created.Format("2006-02-01"), c.Digest})
+			data = append(data, []string{c.Repo, c.Tag, c.Created.Format("2006-01-02"), c.Digest})
 		}
 	}
 
