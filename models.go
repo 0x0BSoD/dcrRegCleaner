@@ -9,19 +9,9 @@ type Config struct {
 	ApiVersion string `yaml:"api_ver"`
 }
 
-type ToPrint []ToPrintItem
+type ToPrint map[string]ToPrintList
 
-func (t ToPrint) Len() int {
-	return len(t)
-}
-
-func (t ToPrint) Less(i, j int) bool {
-	return t[i].Created.Before(t[j].Created)
-}
-
-func (t ToPrint) Swap(i, j int) {
-	t[i], t[j] = t[j], t[i]
-}
+type ToPrintList []ToPrintItem
 
 type ToPrintItem struct {
 	Created time.Time
@@ -29,6 +19,18 @@ type ToPrintItem struct {
 	Digest  string
 	Size    int
 	Tag     string
+}
+
+func (t ToPrintList) Len() int {
+	return len(t)
+}
+
+func (t ToPrintList) Less(i, j int) bool {
+	return t[i].Created.Before(t[j].Created)
+}
+
+func (t ToPrintList) Swap(i, j int) {
+	t[i], t[j] = t[j], t[i]
 }
 
 type ApiRepos struct {

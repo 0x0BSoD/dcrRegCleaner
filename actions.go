@@ -89,7 +89,7 @@ func printRegContent(c *Client) error {
 		return err
 	}
 
-	var toPrint ToPrint
+	toPrint := make(ToPrint)
 
 	for _, r := range repos.Repositories {
 		tags, err := tags(c, r)
@@ -104,7 +104,7 @@ func printRegContent(c *Client) error {
 				continue
 			}
 
-			toPrint = append(toPrint, ToPrintItem{
+			toPrint[r] = append(toPrint[r], ToPrintItem{
 				Created: created,
 				Repo:    r,
 				Digest:  digest,

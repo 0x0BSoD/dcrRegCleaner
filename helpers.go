@@ -29,9 +29,11 @@ func parseConfig(path string) (Config, error) {
 func printAsTable(toPrint ToPrint) {
 	data := make([][]string, 0, len(toPrint))
 
-	sort.Sort(toPrint)
-	for _, c := range toPrint {
-		data = append(data, []string{c.Repo, c.Tag, c.Created.Format("2006-02-01"), c.Digest})
+	for _, i := range toPrint {
+		sort.Sort(i)
+		for _, c := range i {
+			data = append(data, []string{c.Repo, c.Tag, c.Created.Format("2006-02-01"), c.Digest})
+		}
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
