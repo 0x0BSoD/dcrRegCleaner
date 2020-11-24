@@ -89,7 +89,7 @@ func (c *Client) getResponse(method, endpoint string, body []byte) (*http.Respon
 	}
 
 	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Accept", "application/vnd.docker.distribution.manifest.v2+json")
+	req.Header.Add("Accept", "application/vnd.docker.distribution.manifest.list.v2+json")
 
 	resp, err := c.http.Do(req)
 	if err != nil {

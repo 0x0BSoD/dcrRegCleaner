@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 func catalog(c *Client) (ApiRepos, error) {
@@ -35,10 +36,10 @@ func tags(c *Client, repo string) (ApiTags, error) {
 	return res, nil
 }
 
-func shaDigestAndSize(c *Client, repo, tag string) (string, int, error) {
+func shaDigestAndSize(c *Client, repo, tag string) (string, time.Time, error) {
 	bData, headers, err := c.Get(fmt.Sprintf("/%s/manifests/%s", repo, tag))
 	if err != nil {
-		return "", 0, err
+		return "", time.Time{}, err
 	}
 
 	digest := headers.Get("Docker-Content-Digest")
@@ -46,15 +47,28 @@ func shaDigestAndSize(c *Client, repo, tag string) (string, int, error) {
 	var res ApiManifest
 	err = json.Unmarshal(bData, &res)
 	if err != nil {
-		return "", 0, err
+		return "", time.Time{}, err
 	}
 
-	var size int
-	for _, c := range res.Layers {
-		size += c.Size
+	var containerInfo ApiManifestCommon
+	err = json.Unmarshal([]byte(res.History[0].V1Compatibility), &containerInfo)
+	if err != nil {
+		return "", time.Time{}, err
 	}
 
-	return digest, size + res.Config.Size, nil
+	// container layers
+	//for _, v := range res.History[1:] {
+	//	var cc ApiManifestContainerConfig
+	//	err = json.Unmarshal([]byte(v.V1Compatibility), &cc)
+	//	if err != nil {
+	//		return "", 0, err
+	//	}
+	//
+	//	fmt.Println(v.V1Compatibility)
+	//	fmt.Println()
+	//}
+
+	return digest, containerInfo.Created, nil
 }
 
 func removeImage(c *Client, repo, tag string) error {
@@ -81,16 +95,17 @@ func printRegContent(c *Client) error {
 		}
 
 		for _, t := range tags.Tags {
-			d, s, err := shaDigestAndSize(c, r, t)
+			digest, created, err := shaDigestAndSize(c, r, t)
 			if err != nil {
 				return err
 			}
 
 			toPrint = append(toPrint, ToPrintItem{
-				Repo:   r,
-				Tag:    t,
-				Digest: d,
-				Size:   s,
+				Created: created,
+				Repo:    r,
+				Digest:  digest,
+				Size:    0,
+				Tag:     t,
 			})
 		}
 	}
