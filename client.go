@@ -15,6 +15,7 @@ type Client struct {
 	Url        string
 	http       *http.Client
 	TagsToStay int
+	RmCheck    bool
 }
 
 // Parameters for new client

@@ -6,7 +6,6 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
-	"sort"
 )
 
 func parseConfig(path string) (Config, error) {
@@ -26,22 +25,12 @@ func parseConfig(path string) (Config, error) {
 	return config, nil
 }
 
-func printAsTable(toPrint ToPrint) {
-	data := make([][]string, 0, len(toPrint))
-
-	for _, i := range toPrint {
-		sort.Sort(i)
-		for _, c := range i {
-			data = append(data, []string{c.Repo, c.Tag, c.Created.Format("2006-01-02"), c.Digest})
-		}
-	}
-
+func printAsTable(toPrint [][]string) {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Repo", "Tag", "Created", "Digest"})
 	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
-	//table.SetAutoMergeCells(true)
 	table.SetCenterSeparator("|")
 	table.SetRowLine(true)
-	table.AppendBulk(data)
+	table.AppendBulk(toPrint)
 	table.Render()
 }
